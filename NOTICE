@@ -1,0 +1,12 @@
+SpotTrader — Copyright (c) 2026 Morris Wing — MIT License (see LICENSE).
+
+Third-party software bundled or referenced:
+- KLineChart (https://github.com/klinecharts/KLineChart) — Apache License 2.0.
+  Bundled: app/src/main/assets/kline/klinecharts.min.js
+  See app/src/main/assets/kline/LICENSE-KLineChart.txt and NOTICE-KLineChart.txt.
+- TradingView Lightweight Charts — Apache License 2.0.
+  See app/src/main/assets/kline/LICENSE-lightweight-charts.txt.
+- Jesse (https://github.com/jesse-ai/jesse) — MIT License. Risk-based position
+  sizing (risk_to_qty) is modeled on Jesse. See the in-app Licenses page.
+- MEXC websocket-proto (https://github.com/mexcdevelop/websocket-proto) — field
+  numbers used by the hand-written protobuf decoder (no code copied).

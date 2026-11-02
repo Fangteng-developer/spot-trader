@@ -1,0 +1,29 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- Desktop preview of the bundled KLineChart page with demo data (used to produce screenshots; not shipped in the APK). -->
+<style>html,body{margin:0;height:100%;background:#090B10;overflow:hidden}#c{position:absolute;inset:0}#err{position:absolute;bottom:0;left:0;color:#f55;font:12px monospace;z-index:9}</style>
+<script>window.onerror=function(m,s,l){document.addEventListener('DOMContentLoaded',function(){document.getElementById('err').textContent+=m+' @'+l+'\n'});document.title='ERR '+m+' '+l};</script>
+<script src="../app/src/main/assets/kline/klinecharts.min.js"></script></head>
+<body><div id="c"></div><pre id="err"></pre><script src="../app/src/main/assets/kline/kc.js"></script>
+<script>
+var q=new URLSearchParams(location.search), mode=q.get('m')||'full';
+var seed=7; function rnd(a,b){seed=(seed*16807)%2147483647; return a+(b-a)*(seed/2147483647);}
+var p=81000, now=1792000000000, data=[]; for(var i=0;i<160;i++){var o=p; p+=rnd(-380,400); var h=Math.max(o,p)+rnd(0,160), l=Math.min(o,p)-rnd(0,160); data.push([now+i*900000,o,h,l,p,rnd(40,420)]);}
+var last=p; KC.setCompact(mode==='small');
+KC.load('BTCUSDT','15m',2,5,data);
+if(mode==='small'){ KC.setIndicators([{name:'MA',params:[7,25,99],main:true},{name:'VOL',params:[],main:false}]); }
+else { KC.setIndicators([{name:'MA',params:[7,25,99],main:true},{name:'BOLL',params:[20,2],main:true},{name:'VOL',main:false},{name:'MACD',params:[12,26,9],main:false},{name:'RSI',params:[14],main:false}]); }
+var t=function(i){return data[i][0]};
+if(mode!=='small') KC.setDrawings([
+ {name:'segment',points:[{timestamp:t(20),value:data[20][3]},{timestamp:t(110),value:data[110][3]}]},
+ {name:'fibonacciLine',points:[{timestamp:t(60),value:Math.max.apply(null,data.slice(40,90).map(function(k){return k[2]}))},{timestamp:t(130),value:Math.min.apply(null,data.slice(90,140).map(function(k){return k[3]}))}]},
+ {name:'rectangle',points:[{timestamp:t(120),value:last+500},{timestamp:t(145),value:last-300}]},
+ {name:'horizontalStraightLine',points:[{timestamp:t(100),value:last+900}]},
+ {name:'verticalStraightLine',points:[{timestamp:t(140)}]},
+ {name:'textLabel',points:[{timestamp:t(122),value:last+560}],extendData:'整理区间'}]);
+var L=[{id:'ask',price:last+0.7,label:'',color:'#F2566B'},{id:'bid',price:last,label:'',color:'#9AA3B2',fg:'#000'},
+ {id:'ord:11',price:last-650,label:'buy limit 0.015  ✕',color:'#2EBD8E',dash:true,drag:true,click:true},
+ {id:'ord:12',price:last+520,label:'sell limit 0.015  ✕',color:'#F2566B',dash:true,drag:true,click:true},
+ {id:'pos',price:last-1150,label:'持仓 0.1832 @'+(last-1150).toFixed(2)+'  +1.42%',color:'#E8B04B',dash:true}];
+if(mode!=='small'){L.push({id:'tp',price:last+1400,label:'TP 0.1832 → +'+(0.1832*2550).toFixed(2)+' USDT',color:'#2EBD8E',drag:true,width:1.5});L.push({id:'sl',price:last-1700,label:'SL 0.1832 → -'+(0.1832*550).toFixed(2)+' USDT',color:'#F2566B',drag:true,width:1.5});}
+KC.setLines(L);
+</script></body></html>
